@@ -10,6 +10,12 @@ def update_base_label(event):
     base_label.config(text=name)
 
 
+def update_base_2_label(event):
+    code = base_2_combobox.get()
+    name = currencies[code]
+    base_2_label.config(text=name)
+
+
 def update_currency_label(event):
     code = target_combobox.get()
     name = currencies[code]
@@ -58,6 +64,14 @@ base_combobox.pack()
 base_label = ttk.Label()
 base_label.pack(pady=10, padx=10)
 base_combobox.bind("<<ComboboxSelected>>", update_base_label)
+
+Label(text='Вторая базовая валюта').pack(pady=10, padx=10)
+base_2_combobox = ttk.Combobox(values=list(currencies.keys()))
+base_2_combobox.pack()
+
+base_2_label = ttk.Label()
+base_2_label.pack(pady=10, padx=10)
+base_2_combobox.bind("<<ComboboxSelected>>", update_base_2_label)
 
 Label(text='Целевая валюта').pack(pady=10, padx=10)
 target_combobox = ttk.Combobox(values=list(currencies))
