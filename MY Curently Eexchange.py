@@ -25,19 +25,29 @@ def update_currency_label(event):
 def exchange():
     target_code = target_combobox.get()
     base_code = base_combobox.get()
-    if target_code and base_code:
+    base_2_code = base_2_combobox.get()
+    if target_code and base_code and base_2_code:
         try:
+
             result = requests.get(f"https://open.er-api.com/v6/latest/{base_code}")
             result.raise_for_status()
             data = result.json()
-            if target_code in data['rates']:
+
+            result_2 = requests.get(f"https://open.er-api.com/v6/latest/{base_2_code}")
+            result_2.raise_for_status()
+            data_2 = result_2.json()
+
+            if target_code in data['rates'] and target_code in data_2['rates']:
                 exchange_rate = data['rates'][target_code]
+                exchange_rate_2 = data_2['rates'][target_code]
                 base = currencies[base_code]
+                base_2 = currencies[base_2_code]
                 target = currencies[target_code]
 
                 mb.showinfo('Курс обмена',
-                            f'Курс '
-                            f'  {exchange_rate:.1f}  {target} за 1 {base}')
+                            f'Курс\n'
+                            f'{exchange_rate:.1f} {target} за 1 {base},\n'
+                            f'{exchange_rate_2:.1f} {target} за 1 {base_2}')
             else:
                 mb.showerror('Ошибка', f'Валюта {target_code} не найдена')
 
@@ -83,7 +93,5 @@ target_combobox.bind("<<ComboboxSelected>>", update_currency_label)
 
 button = Button(text='Получить курс', command=exchange)
 button.pack()
-
-
 
 root.mainloop()
